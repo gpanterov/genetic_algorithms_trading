@@ -91,7 +91,8 @@ def mutate_enabled_genes(chrom, mutate_prob_on=1e-3, mutate_prob_off=1e-2, verbo
 		if switch:
 			if verbose:
 				print pos, " switch from ", gene[-1]
-			gene[-1] = np.invert(gene[-1])
+
+			gene[-1] = bool(np.invert(gene[-1]))  # You need to transform from numpy.bool to bool for the json.dump to work !!
 		
 		mutated_chrom.append(tuple(gene))
 	return tuple(mutated_chrom)

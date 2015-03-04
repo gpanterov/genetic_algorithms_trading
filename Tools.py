@@ -48,7 +48,7 @@ def gen_random_population(pop_size, SignalsMap, StopsMap, prob_enabled, json_fil
 	D['iteration'] = 0
 	with open(json_file_path, 'w') as outfile:
    		json.dump(D, outfile)
-
+	return Population
 
 
 	
@@ -80,7 +80,7 @@ def validate_chrom(chrom, verbose=False):
 	else:
 		return chrom
 
-def simulate_strategy(data, trader, SignalsMap, start_period=1e3, verbose=False):
+def simulate_strategy(data, trader, SignalsMap, start_period=1e3, verbose=False, direction=1):
 	"""
 	Simulates trading for a given trader
 
@@ -115,7 +115,7 @@ def simulate_strategy(data, trader, SignalsMap, start_period=1e3, verbose=False)
 			if entry:
 				if verbose:
 					print "Open Position"
-				simulation.open_position(1)
+				simulation.open_position(direction)
 		else:  # Exit the position if there is an exit signal or you hit the stops
 			exit_conditions = evaluate_chrom(series, trader['ExitSignals'], SignalsMap)
 			exit_ = np.prod(exit_conditions, dtype=bool)

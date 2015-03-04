@@ -13,8 +13,9 @@ import json
 
 
 
-pop_size = 10  # Size of population
+pop_size = 25  # Size of population
 retain_rate = 0.2
+gen_random_pop = False
 
 #############
 # Load Data #
@@ -25,7 +26,7 @@ all_data = pickle.load(f)
 df = all_data[all_data.Volume>0]
 
 #df = df[:200000] # Smaller data set to test and run faster
-df = sim.collapse_data(df, 15)
+df = sim.collapse_data(df, 30)
 ######################
 # Generate Population #
 ######################
@@ -33,11 +34,13 @@ SignalsMap = gmap.SignalsMap
 StopsMap = gmap.StopsMap
 prob_enabled = 0.1
 
-#tools.gen_random_population(pop_size, SignalsMap, StopsMap, prob_enabled, 
-#		json_file_path = 'populations/random_population.json')
+if gen_random_pop:
+	tools.gen_random_population(pop_size, SignalsMap, StopsMap, prob_enabled, 
+			json_file_path = 'populations/population.json')
 
-json_file = open('populations/latest_population.json')
+json_file = open('populations/population.json')
 D = json.load(json_file)
+json_file.close()
 
 parent_pop = D['population']
 iteration = D['iteration']
@@ -52,7 +55,7 @@ for trader in parent_pop:
 	simulation = tools.simulate_strategy(df, trader, SignalsMap, verbose=False)
 	fit = simulation.calculate_profits()
 	pop_fitness.append(fit)
-	print fit
+	print fit, len(simulation.orders_record)
 
 print "Simulation took %s seconds" % (time.time() - simulation_start_time)
 
@@ -89,15 +92,13 @@ while len(new_pop) < len(parent_pop):
 	off_stop = ga.mate_random(trader1['StopSignals'], trader2['StopSignals'])
 	off_stop = ga.mutate_value_genes(off_stop, SignalsMap)
 	new_trader['StopSignals'] = off_stop
-
+	print off_stop
 	new_pop.append(new_trader)
 
-new_pop = tuple(new_pop)
 
-D = {}
-D['population'] = new_pop
+D={'population': new_pop}
 D['iteration'] = iteration + 1
-with open('populations/latest_population.json', 'w') as outputfile:
+with open('populations/population.json', 'w') as outputfile:
 	json.dump(D, outputfile)
 
 
