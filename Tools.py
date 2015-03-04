@@ -36,13 +36,26 @@ def evaluate_chrom(series, chrom, signal_map):
 		res.append(val)
 	return res
 
-def gen_signals(data, chrom, SignalsMap):
+def gen_signals(data, chrom, SignalsMap, start_pos=1000):
 	signals = []
-	for i in range(1000, len(data)):
+	for i in range(start_pos, len(data)):
 		if i%25000==0:
 			print i
 		series = data[i-1e3 : i]
 		val = evaluate_chrom(series, chrom, SignalsMap)
 		signals.append(val)
-	return signals
+
+	sample_data = data[start_pos:]
+	return sample_data, signals
+
+def calculate_profit(sample_data, positions):
+	profit = []
+	assert len(sample_data) == len(positions)
+	s = np.array(sample_data)
+	changes = s[1:] - s[:-1]
+	profit.append(changes * positions[1:])
+	return profit
+
+def OptimizeWeights(data, signals, pop_size, num_gen):
+	pass
 
