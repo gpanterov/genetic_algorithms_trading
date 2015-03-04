@@ -54,12 +54,9 @@ pop_fitness = []
 for trader in parent_pop:
 	simulation = tools.simulate_strategy(df, trader, SignalsMap, verbose=False, direction=-1)
 
-	fit = simulation.calculate_profits()
-	if fit == -5e3:  # no trades	
-		pop_fitness.append(fit)
-	else:
-		pop_fitness.append(abs(fit))
-	print fit, len(simulation.orders_record), pop_fitness[-1]
+	profit= simulation.calculate_profits()
+	pop_fitness.append(abs(profit))
+	print profit, len(simulation.orders_record), pop_fitness[-1]
 
 print "Simulation took %s seconds" % (time.time() - simulation_start_time)
 
