@@ -45,6 +45,24 @@ def mate_random(chrom1, chrom2):
 		offspring.append(tuple(gene1))
 	return tuple(offspring)
 
+def mate_monoploid_random(w1, w2):
+	offspring=[]
+	for pos in range(len(w1)):
+		if random.getrandbits(1) == 0:
+			offspring.append(w1[pos])
+		else:
+			offspring.append(w2[pos])
+	return offspring
+
+def mutate_monoploid(w, mutate_prob=1e-2, sig=0.1):
+	mutated_w = []
+	for gene in w:
+		if np.random.uniform() < mutate_prob:
+			mutated_w.append(np.random.normal(gene, sig))
+		else:
+			mutated_w.append(gene)
+	return np.array(mutated_w)
+
 def truncated_random_normal(val, val_range, share=0.1):
 	"""
 	returns a random normal around val within the range

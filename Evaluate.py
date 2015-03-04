@@ -32,7 +32,7 @@ c = tools.random_signal_params(gmap.SignalsMap)
 data = df.Close.values
 
 start = time.time()
-signals = tools.gen_signals(data, c, gmap.SignalsMap)
+sample_data, signals = tools.gen_signals(data, c, gmap.SignalsMap)
 print time.time() - start
 #######################
 ## Generate Population #
