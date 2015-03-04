@@ -95,7 +95,7 @@ class Simulation(object):
 
 	def calculate_profits(self):
 		if len(self.orders_record)<2:
-			return 0
+			return 0.1
 		df = pd.DataFrame(self.orders_record)
 		profit = np.sum(df[1] * df[2])
 		return -profit
