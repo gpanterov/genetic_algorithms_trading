@@ -52,10 +52,14 @@ print "Currently at %s iteration" % iteration
 simulation_start_time = time.time()
 pop_fitness = []
 for trader in parent_pop:
-	simulation = tools.simulate_strategy(df, trader, SignalsMap, verbose=False)
+	simulation = tools.simulate_strategy(df, trader, SignalsMap, verbose=False, direction=-1)
+
 	fit = simulation.calculate_profits()
-	pop_fitness.append(fit)
-	print fit, len(simulation.orders_record)
+	if fit == -5e3:  # no trades	
+		pop_fitness.append(fit)
+	else:
+		pop_fitness.append(abs(fit))
+	print fit, len(simulation.orders_record), pop_fitness[-1]
 
 print "Simulation took %s seconds" % (time.time() - simulation_start_time)
 
@@ -92,7 +96,6 @@ while len(new_pop) < len(parent_pop):
 	off_stop = ga.mate_random(trader1['StopSignals'], trader2['StopSignals'])
 	off_stop = ga.mutate_value_genes(off_stop, SignalsMap)
 	new_trader['StopSignals'] = off_stop
-	print off_stop
 	new_pop.append(new_trader)
 
 
