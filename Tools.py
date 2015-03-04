@@ -7,16 +7,16 @@ import GeneMap as gmap
 reload(gmap)
 import json
 
-def rand_base_args(signal_map):
+def random_signal_params(signal_map):
 	"""
 	"""
 	chrom = []
-	for gene in signal_map:
-		t = np.random.normal(5, 3)  #chose the values arbitraly
-		t = int(t)
-		t = max(1, t)
-		chrom.append(t)
+	for cls in signal_map:
+		gene = cls.gen_random_gene()
+		chrom.append(tuple(gene))
 	return tuple(chrom)
+
+
 
 def rand_weights(signal_map, sig=.3):
 	w = []
@@ -29,9 +29,20 @@ def evaluate_chrom(series, chrom, signal_map):
 	res = []
 	for pos, gene in enumerate(chrom):
 
-		func = signal_map[pos]
-		val = func(series, gene)
+		func = signal_map[pos].func
+		args = [series]
+		args.extend(gene)
+		val = func(args)
 		res.append(val)
-	return np.array(res)
+	return res
 
+def gen_signals(data, chrom, SignalsMap):
+	signals = []
+	for i in range(1000, len(data)):
+		if i%25000==0:
+			print i
+		series = data[i-1e3 : i]
+		val = evaluate_chrom(series, chrom, SignalsMap)
+		signals.append(val)
+	return signals
 

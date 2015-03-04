@@ -27,20 +27,12 @@ all_data = pickle.load(f)
 df = all_data[all_data.Volume>0]
 df = sim.collapse_data(df, minutes=5)
 
-c = tools.rand_base_args(gmap.SignalsMap)
-w = tools.rand_weights(gmap.SignalsMap)
+c = tools.random_signal_params(gmap.SignalsMap)
 
 data = df.Close.values
 
 start = time.time()
-sig = []
-for i in range(1000, len(data)):
-	if i%50000 == 0:
-		print i
-	series = data[i-1e3 : i]
-	val = tools.evaluate_chrom(series, c, gmap.SignalsMap)
-	ex = np.exp(-np.sum(val*w))
-	sig.append(1/(ex+1))
+signals = tools.gen_signals(data, c, gmap.SignalsMap)
 print time.time() - start
 #######################
 ## Generate Population #
