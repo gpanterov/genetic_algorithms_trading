@@ -127,3 +127,39 @@ def simulate_strategy(data, trader, SignalsMap, start_period=1e3, verbose=False,
 
 	return simulation
 
+
+def gene_info(gene, pos, SignalsMap):
+	message = None
+	if gene[-1]:
+		if pos <=5:
+			values = (gene[0] - gene[1], gene[0] + gene[1], -pos)
+			message = "%s < (P[t-1] - P[t-2]) / P[t-2] < %s where t = %s" % values 
+			return message
+		if pos == 6:
+			values = (gene[0]-gene[1], gmap.pr_n_periods, gene[0] + gene[1])
+			message = " %s < Current price / (Max Price in last %s periods) < %s" % values
+		if pos == 7:
+			values = (gene[0]-gene[1], gmap.pr_n_periods, gene[0] + gene[1])
+			message = " %s < Current price / (Min Price in last %s periods) < %s" % values
+		if pos == 8:
+			values = (gene[0]-gene[1], gmap.vol_n_periods, gene[0] + gene[1])
+			message = " %s < Volatility / Average over last %s periods < %s" % values
+
+		if pos == 9:
+			values = (gene[0], gene[1])
+			message = " MA(%s) crosses from below MA(%s)" % values
+
+		if pos == 10:
+			values = (gene[0], gene[1])
+			message = " MA(%s) crosses from above  MA(%s)" % values
+			
+
+	return message
+
+def display_chrom_info(chrom, SignalsMap):
+	info = ""
+	for pos, gene in enumerate(chrom):
+		message = gene_info(gene, pos, SignalsMap)
+		if message is not None:
+			info += message + "\n"
+	return info

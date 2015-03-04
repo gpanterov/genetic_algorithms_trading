@@ -73,7 +73,7 @@ class HistValues(object):
 		if not enabled:
 			return True
 		price = self.func_type(series[-self.n_periods:])
-		x = series[-self.t - 1] - value * price
+		x = series[-self.t - 1] / price
 		return value - error < x < value + error
 
 pr_n_periods = 1e3
