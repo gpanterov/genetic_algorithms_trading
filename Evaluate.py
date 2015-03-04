@@ -52,7 +52,7 @@ print "Currently at %s iteration" % iteration
 simulation_start_time = time.time()
 pop_fitness = []
 for trader in parent_pop:
-	simulation = tools.simulate_strategy(df, trader, SignalsMap, verbose=False, direction=-1)
+	simulation = tools.simulate_strategy(df, trader, SignalsMap, verbose=False, direction=1)
 
 	profit= simulation.calculate_profits()
 	pop_fitness.append(abs(profit))
@@ -74,6 +74,7 @@ for i in best_indx[::-1]:
 	new_pop.append(parent_pop[i])
 
 cdf_vals = ga.cdf(pop_fitness)
+print cdf_vals
 while len(new_pop) < len(parent_pop):
 	new_trader = {}
 	trader1 = ga.choice(parent_pop, cdf_vals)
@@ -82,7 +83,7 @@ while len(new_pop) < len(parent_pop):
 	off_entry = ga.mate_random(trader1['EntrySignals'], trader2['EntrySignals'])
 	off_entry = ga.mutate_value_genes(off_entry, SignalsMap)
 	off_entry = ga.mutate_enabled_genes(off_entry)
-	new_trader['EntrySignals'] = off_entry
+	new_trader['EntrySignals'] = tools.validate_chrom(off_entry)
 
 
 	off_exit = ga.mate_random(trader1['ExitSignals'], trader2['ExitSignals'])
