@@ -54,7 +54,7 @@ def mate_monoploid_random(w1, w2):
 			offspring.append(w2[pos])
 	return offspring
 
-def mutate_monoploid(w, mutate_prob=1e-2, sig=0.1):
+def mutate_monoploid(w, mutate_prob=2e-1, sig=0.1):
 	mutated_w = []
 	for gene in w:
 		if np.random.uniform() < mutate_prob:

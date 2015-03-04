@@ -61,6 +61,7 @@ def calculate_profit(sample_data, positions):
 def OptimizeWeights(sample_data, signals, pop_size, num_gen, retain_rate=0.2):
 	num_signals = np.shape(signals)[1]
 	W = np.random.normal(0, 0.3, size=(pop_size, num_signals))
+	Best_Fit = []
 	for n in range(num_gen):
 
 		pop_fitness = []
@@ -91,5 +92,8 @@ def OptimizeWeights(sample_data, signals, pop_size, num_gen, retain_rate=0.2):
 			new_pop.append(off)
 		W = np.array(new_pop)
 		print pop_fitness[0]
-	return W
+		Best_Fit.append(pop_fitness[0])
+		if np.std(Best_Fit[-10:]) < 0.1 and len(Best_Fit[-10:])==10: # If there is no change in the past 10 periods exit
+			return pop_fitness[0], W
+	return pop_fitness[0], W
 

@@ -33,6 +33,7 @@ data = df.Close.values
 
 start = time.time()
 sample_data, signals = tools.gen_signals(data, c, gmap.SignalsMap)
+fit, W = tools.OptimizeWeights(sample_data, signals, 100,100)
 print time.time() - start
 #######################
 ## Generate Population #
